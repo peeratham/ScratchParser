@@ -1,0 +1,23 @@
+{
+  "objName": "Stage",
+  "children": [
+    {
+      "objName": "Sprite1",
+      "scripts": [
+        [
+          61,
+          85,
+          [
+            [
+              "whenGreenFlag"
+            ],
+            [
+              "forward:",
+              10
+            ]
+          ]
+        ]
+      ]
+    }
+  ]
+}

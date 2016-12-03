@@ -1,0 +1,38 @@
+aspect PrettyPrinter {
+	public String ASTNode.print() {
+		return "";
+	}
+	
+	public String Start.print() {
+		String result = "";
+		for(int i = 0; i < getNumScript(); i++){
+			result += "<script:"+getScript(i).print()+">";
+		}
+		return result;
+	}
+	
+	public String Script.print() {
+		String result = "";
+		for(int i = 0; i < getNumBlock(); i++){
+			result += "[block:"+getBlock(i).print()+"]";
+		}
+		return result;
+	}
+	
+	public String CommandBlock.print() {
+		String result = "(vals:";
+		String sep = "";
+		for(int i = 0; i < getNumExp(); i++){
+			result += sep;
+			result += getExp(i).print();
+			sep = ", ";
+		}
+		result += ")";
+		
+		return result;
+	}
+	
+	public String ValueExp.print() {
+		return getID();
+	}
+}

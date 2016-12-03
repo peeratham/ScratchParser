@@ -1,0 +1,6 @@
+Start ::= Script*;
+Script ::= Block*;
+abstract Block;
+CommandBlock: Block ::= Exp*;
+abstract Exp;
+ValueExp: Exp ::= <ID>;

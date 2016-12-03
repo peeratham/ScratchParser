@@ -1,0 +1,74 @@
+/* *** Specification of the parser class *** */
+
+PARSER_BEGIN(ScratchParser)
+package AST;
+public class ScratchParser {}
+PARSER_END(ScratchParser)
+
+/* *** Token specification *** */
+
+/* Skip whitespace */
+SKIP : { " " | "\t" | "\n" | "\r" }
+
+
+/* Identifiers */
+TOKEN: {
+  < ID: (["A"-"Z", "a"-"z"])+ >
+}
+
+/* *** Context-free grammar (EBNF) *** */
+
+
+Start Start() #Start: {}        // Program -> Script
+{
+	"{" ScriptList() "}"
+  { return jjtThis; }
+}
+
+void ScriptList() #List:{}
+{
+  Script() ( "," Script())*
+}
+
+void Script() #Script:{}
+{
+	"<" BlockList() ">" 
+}
+
+void BlockList() #List: {}
+{
+   Block()
+  ( "," Block()
+  )*
+}
+
+void Block() : {}
+{
+  "[" CommandBlock() "]"
+}
+
+void CommandBlock() #CommandBlock: {}
+{
+  ExpList()
+}
+
+void ExpList() #List: {}
+{
+  "(" Exp()
+  ( "," Exp()
+  )*
+  ")"
+}
+void Exp() : {}						// Exp -> ValueExp
+{
+  ValueExp()
+}
+
+void ValueExp() #ValueExp:            // ValueExp -> ID
+{ Token t; }
+{
+  t = <ID>
+  { jjtThis.setID(t.image);
+  }
+}
+

@@ -1,0 +1,14 @@
+  Start
+    List
+      Script
+        List
+          CommandBlock
+            List
+              ValueExp"a"
+              ValueExp"b"
+              ValueExp"s"
+          CommandBlock
+            List
+              ValueExp"a"
+              ValueExp"b"
+              ValueExp"s"

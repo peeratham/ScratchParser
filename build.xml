@@ -1,0 +1,100 @@
+<!-- Targets for working from terminal window:
+       build (default) - generates java files and compiles them
+       test            - runs junit test cases
+       clean           - removes all generated files and class files
+     Targets for working from Eclipse:
+       gen             - generates java files
+       genClean        - removes all generated files and their class files
+ -->
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="Compiler" default="build" basedir=".">
+<!--<project name="Compiler" default="build" basedir="."> -->
+
+	<!-- "parser.name" is the language name used in the jjt file  -->
+	<property name="parser.name" value="ScratchParser" />
+
+	<!-- "package" is the directory where generated files will be stored -->
+	<property name="package" value="AST" />
+
+	<!-- "tools" is the directory where JavaCC.zip and junit.jar are located. -->
+	<property name="tools" value="tools" />
+
+	<property name="ivy.install.version" value="2.0.0-beta1"/>
+	<property name="ivy.jar.file" value="${tools}/ivy.jar" />
+	
+	<property name="ivy.lib.dir" value="${tools}"/>
+
+	<!-- "jastadd" is an ant task class in jastadd2.jar -->
+	<taskdef classname="jastadd.JastAddTask" name="jastadd" classpath="${tools}/jastadd2.jar" />
+
+	<!-- download Ivy -->
+	<target name="download-ivy" unless="skip.download">
+		<!--
+	 download Ivy from web site so that it can be used even without any special installation 
+	-->
+		<echo message="installing ivy..." />
+		<get src="https://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="${ivy.jar.file}" usetimestamp="true"/>
+	</target>
+
+	<target name="install-ivy" depends="download-ivy" description="--> install ivy">
+		<path id="ivy.lib.path">
+			<fileset dir="${tools}" includes="*.jar" />
+		</path>
+		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path" />
+	</target>
+	
+	 <target name="resolve" description="--> retrieve dependencies with ivy">
+	        <ivy:retrieve />
+	    </target>
+
+	<target name="go" depends="install-ivy" description="--> resolve dependencies, compile and run the project">
+		<echo message="using ivy to resolve commons-io 2.4..." />
+		<ivy:cachepath organisation="commons-io" module="commons-io" revision="2.4" pathid="lib.path.id" inline="true" />
+		<echo message="compiling..." />
+	</target>
+
+
+	<!-- TARGET build -->
+	<target name="build" depends="go, resolve, gen">
+		<!-- compile all java files in srcdir and recursively in subdirectories -->
+		<!-- you can use the jikes compiler by changing javac1.4 to jikes -->
+		<javac compiler="javac1.4" debug="true" srcdir="." classpath="${tools}/junit.jar" />
+	</target>
+
+	<!-- TARGET gen -->
+	<target name="gen">
+		<!-- create a directory for the generated files -->
+		<mkdir dir="${basedir}/${package}" />
+		<!-- run jastadd to generate AST files -->
+		<jastadd package="${package}" jjtree="true" grammar="${parser.name}" outdir="${basedir}">
+			<fileset dir=".">
+				<include name="**/*.ast" />
+				<include name="**/*.jrag" />
+				<include name="**/*.jadd" />
+			</fileset>
+		</jastadd>
+		<!-- run jjtree to generate a javacc jj file-->
+		<jjtree target="${parser.name}.jjt" outputdirectory="${package}" javacchome="${tools}" buildnodefiles="true" static="false" multi="true" visitor="true" nodedefaultvoid="true" nodeprefix='""' nodepackage="${package}" />
+		<!-- run javacc to generate the parser -->
+		<javacc target="${package}/${parser.name}.jj" outputdirectory="${package}" javacchome="${tools}" buildparser="true" buildtokenmanager="true" static="false" />
+	</target>
+
+	<!-- TARGET clean -->
+	<target name="clean" depends="cleanGen">
+		<!-- Delete all classfiles in dir and recursively in subdirectories -->
+		<delete>
+			<fileset dir="." includes="**/*.class" />
+		</delete>
+	</target>
+
+	<!-- TARGET cleanGen -->
+	<target name="cleanGen">
+		<!-- Delete the directory containing generated files and their class files -->
+		<delete dir="${package}" />
+	</target>
+
+	<!-- TARGET test -->
+	<target name="test" depends="build">
+		<!-- Run all tests in dir by using the TestAll java program -->
+		<java classname="testframework.TestAll" classpath=".:${tools}/junit.jar:${tools}/commons-io-2.4.jar" fork="true" dir="." />
+	</target>
+</project>
