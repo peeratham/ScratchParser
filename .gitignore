@@ -1,3 +1,7 @@
  # Untracked files:
 tools/*
 AST/*
+*.class
+tests/*.class
+testframework/*.class
+

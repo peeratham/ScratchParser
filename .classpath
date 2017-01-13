@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path=""/>
+	<classpathentry excluding="tools/" kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="tools/junit.jar"/>
+	<classpathentry kind="lib" path="/home/peeratham/workspace/ScratchParser/tools/junit.jar"/>
+	<classpathentry kind="lib" path="/home/peeratham/workspace/ScratchParser/tools/JavaCC.zip"/>
+	<classpathentry kind="lib" path="/home/peeratham/workspace/ScratchParser/tools/jastadd2.jar"/>
+	<classpathentry kind="lib" path="/home/peeratham/workspace/ScratchParser/tools/ivy.jar"/>
+	<classpathentry kind="lib" path="/home/peeratham/workspace/ScratchParser/tools/commons-io-2.4.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

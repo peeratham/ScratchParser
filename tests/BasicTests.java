@@ -29,7 +29,7 @@ public class BasicTests extends TestCaseParse {
 		String a = reader.readLine();
 		reader.close();
 		Start ast = parse(a);
-		System.out.print(ast.print());
+//		System.out.print(ast.print());
 	}
 
 }
