@@ -9,13 +9,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import programs.Parser;
 import AST.Start;
-import testframework.TestCaseParse;
+import junit.framework.TestCase;
 
 
-public class BasicTests extends TestCaseParse {
+public class BasicTests  extends TestCase{
 	public void testParseString() {
-		Start ast = parse("{<[(a,b,s)],[(a,b,s)]>}");
+		Start ast = Parser.parse("{<[(a,b,s)],[(a,b,s)]>}");
 		ast.dumpTree("  ", System.out);
 //		System.out.print(ast.print());
 		
@@ -28,7 +29,7 @@ public class BasicTests extends TestCaseParse {
 				new InputStreamReader(in));
 		String a = reader.readLine();
 		reader.close();
-		Start ast = parse(a);
+		Start ast = Parser.parse(a);
 //		System.out.print(ast.print());
 	}
 

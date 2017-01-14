@@ -12,10 +12,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringReader;
 
-import tests.DumpTests;
-import AST.ScratchParser;
 import AST.ParseException;
+import AST.ScratchParser;
 import AST.Start;
 
 /**
@@ -69,6 +69,20 @@ public class Parser {
 			}
 		}
 		return r;
+	}
+
+	public static Start parse(String s) {
+		Reader r = new StringReader(s);
+		Start ast = null;
+		try {
+			ScratchParser parser = new ScratchParser(r);
+	
+			// Start parsing from the nonterminal "Start".
+			ast = parser.Start();
+		} catch (ParseException e) {
+			System.out.println(e.getMessage());
+		}
+		return ast;
 	}
 
 }
